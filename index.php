@@ -705,7 +705,8 @@ function to_pdf(){
 <input value='в документ' type='submit' onclick='to_pdf()'>
 <br><br>
 
-Имя проекта: <input id='project_name' value='3812 3811' placeholder='Имя проекта'>
+Имя проекта: <select id="project_name_sel"><option value="">-</option></select>
+<input id='project_name' value='3812 3811' placeholder='Имя проекта'>
 
 
 <input onclick='save_tbl()' type='submit' value='Сохранить' id='SaveTbl'>
@@ -806,6 +807,13 @@ function to_pdf(){
 
 
 <script>
+$(function() {
+    console.log( "ready!" );
+	$.post("http://testsite2.nchti.ru/libs/nchti-shedule/load.php",{"pr_name_sel":"pr_name_sel"},function(base){
+		$("#project_name_sel").append(base);
+	});
+});
+	
     function load_tbl(){
     
     pr_name = $('#project_name').val();
