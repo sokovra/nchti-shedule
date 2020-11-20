@@ -22,7 +22,7 @@ function json_encode_cyr($str) {
 $group = $_POST['group'];
 include '../sql.php';
 
-$mys = new mysqli('localhost',$sql,$pass,$database);
+$mys = new mysqli('localhost',$sql,$pass,$sql);
 
 
 $last_group = $mys -> query("SELECT * FROM `rsp` WHERE `group` = '$group' ORDER BY `id`  DESC");

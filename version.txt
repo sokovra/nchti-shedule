@@ -1,0 +1,7 @@
+0.4
+
+везде slice() исправил на trim() (index.php, group/index.php)
+
+исправил формирование pdf (topdf.php)
+
+исправлил сообщения (ops.php)

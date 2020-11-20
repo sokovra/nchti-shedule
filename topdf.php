@@ -15,20 +15,21 @@ $styles = "
 }
 
 #tbl_to_pdf{
-		border: solid 1px;
+        border: solid 1px;
         border-collapse: collapse;
         z-index:3;
     }
    #tbl_to_pdf td{
-   		border: solid 1px;
+        border: solid 1px;
         height:30px;
         text-align:center;
-        overflow:visible;
-        padding:5px;
-        position:relative;
     }
+     #tbl_to_pdf td[major]{
+        padding: 0 13px; 
+    }
+
     .writ{
-        display:inline-block;
+        display:inline;
         max-width:150px;
         text-align:center;
         padding:0px;
@@ -48,7 +49,8 @@ use Dompdf\Dompdf;
 include_once '/dompdf/autoload.inc.php';
 $dompdf = new Dompdf();
 $dompdf->loadHtml($html,'UTF-8');
-$dompdf->setPaper('A4', 'portrait');
+//$dompdf->setPaper('A3', 'Landscape');
+$dompdf->setPaper('A3', 'portrait');
 $dompdf->render();
  
 // Вывод файла в браузер:

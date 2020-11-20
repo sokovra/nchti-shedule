@@ -78,7 +78,7 @@ function save_tbl(){
 		group = $('#week').find('tr').eq(0).find('td').eq(i).find('.writ').text();
 		groups = groups+group+' ';
 	 }
-	groups = groups.slice(0,-1);
+	groups = groups.trim();
 
     for(i=2;i<count_row;i++){
 
@@ -133,19 +133,19 @@ function save_tbl(){
 send = JSON.stringify(send);
 
 
-$('#inf_tbl').text('<?=$e[2]?>');
+op('<?=$o[2]?>');
 
 
 $.post('base.php',{send:send},function(base){
 	if(base==1){
-		$('#inf_tbl').text('<?=$e[1]?>');
+		op('<?=$o[1]?>');
         send = JSON.parse(send);
 	}
 });
 
 //$('#inf_tbl').text(send);
 }else{
-    op('<?=$e[0]?>');
+    op('<?=$o[0]?>');
 }
 }
 
@@ -440,8 +440,10 @@ $(function(){
          $("#what_do").text('fill');
     });
 });
-
+minu_eq = 1;
 function to_pdf(){
+
+	op('<?=$o[3]?>');
 
     first_html_from_tbl = $("#week").html();
 
@@ -461,6 +463,9 @@ function to_pdf(){
 			old_txt = 'sdfasdf';
 			
 		}
+			if(typeof old_tr == "undefined"){
+				old_tr=i;
+			}
 			
 			findmajor =  $("#week").find("tr").eq(i).find('td').eq(0).attr('major');
 			
@@ -472,20 +477,23 @@ function to_pdf(){
 			
 		new_txt = $("#week").find('tr').eq(i).find('td').eq(eq).text();
 		
-		if((old_txt==new_txt)&(old_txt*1!==0)){
-			old_colspan = $("#week").find('tr').eq(i).find('td').eq(eq-1).attr('colspan');
+		if((old_txt==new_txt)&(old_txt*1!==0)&(i==old_tr)){
+			old_colspan = $("#week").find('tr').eq(i).find('td').eq(eq-minu_eq).attr('colspan');
 			
 			if(!hasattr(old_colspan)){
 				old_colspan = 1;
 			}
 			
-			$("#week").find('tr').eq(i).find('td').eq(eq-1).attr('colspan',old_colspan-(-1));
+			$("#week").find('tr').eq(i).find('td').eq(eq-minu_eq).attr('colspan',old_colspan-(-1));
+
+			minu_eq = old_colspan-(-1);
 			
-			a--;
+			//a--;
 			
-			$("#week").find('tr').eq(i).find('td').eq(eq).remove();
-		}
+			$("#week").find('tr').eq(i).find('td').eq(eq).hide();
+		}else{minu_eq=1;}
 		old_txt = new_txt;
+		old_tr = i;
 		}
 	}
 	
@@ -516,8 +524,38 @@ function to_pdf(){
 			}else{
 				old_eq = i;
 			}
-				
+
 	new_txt = $("#week").find('tr').eq(a).find('td').eq(eq).text();
+
+
+	//correct_width_tbl{ 
+
+	//html_new_txt = $("#week").find('tr').eq(a).find('td').eq(eq).html();
+
+	//$("#week").find('tr').eq(a).find('td').eq(eq).text(html_new_txt);
+
+	all_width = 0;
+
+	writ_length = $("#week").find('tr').eq(a).find('td').eq(eq).find('.writ').length;
+
+	for(e=0;e<writ_length;e++){
+		margin = $("#week").find('tr').eq(a).find('td').eq(eq).find('.writ').eq(e).css('margin-right').replace('px','');
+		padding = $("#week").find('tr').eq(a).find('td').eq(eq).find('.writ').eq(e).css('padding-right').replace('px','');
+
+		width = $("#week").find('tr').eq(a).find('td').eq(eq).find('.writ').eq(e).width();
+
+		$("#week").find('tr').eq(a).find('td').eq(eq).find('.writ').eq(e).attr('align','center');
+
+		if(writ_length>1){
+			$("#week").find('tr').eq(a).find('td').eq(eq).find('.writ').eq(e).css({'display':'inline-block'});
+		}
+
+		all_width = all_width-(-width)-(-margin)*2-(-padding) ;
+	}
+
+	$("#week").find('tr').eq(a).find('td').eq(eq).css('width',all_width+'px');
+	//}
+
 	
 	if((old_txt==new_txt)&(old_txt*1!==0)){
 		old_rowspan = $("#week").find('tr').eq(a-minus_eq).find('td').eq(old_eq).attr('rowspan');
@@ -562,22 +600,27 @@ function to_pdf(){
 		}
 	}
 	
-	$('input').hide();
+	//$('input').hide();
 
     last_html_from_tbl = $("#week").html();
 
     $("#week").html(first_html_from_tbl);
 
-    tbl = "<table id='tbl_to_pdf' border=1>"+last_html_from_tbl+"</table>";
+    tbl = "<table align='center' id='tbl_to_pdf' border=1>"+last_html_from_tbl+"</table>";
+
 
     project_name = $('#project_name').val();
 
+
+    
 
     $.post('topdf.php',{tbl:tbl,project_name:project_name},function(inf){
 
         window.open(inf, '_blank');
 
         $('#inf').html(inf);
+
+        op('<?=$o[4]?> '+inf);
     });
 
 
@@ -682,7 +725,7 @@ function to_pdf(){
 <table class='non' border='1' id='week'>
 
 <tr week=0>
-    <td major>Нед\Гр</td><td>Время</td><td><div class='writ'></div></td>
+    <td major></td><td>часы\группа</td><td><div class='writ'></div></td>
 </tr>
 
 <tr week=1>
@@ -739,7 +782,7 @@ function to_pdf(){
 
 <table class='none' border='1' id='bild_tbl'>
 <tr week=0>
-<td major>Нед\Гр</td><td>Время</td>
+<td major></td><td>часы\группа</td>
 </tr>
 <tr week=1>
     <td major rowspan='1'>Пн</td>
@@ -769,7 +812,7 @@ function to_pdf(){
         $.post('load.php',{'pr_name':pr_name},function(base){
 
 
-            tbls = base.slice(1);
+            tbls = base.trim();
 
             //$('#inf').text(tbls);
 

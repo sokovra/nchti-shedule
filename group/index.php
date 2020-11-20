@@ -10,7 +10,7 @@ function get_rsp(){
 	group = $('#set_group').val();
 	$.post('load.php',{group:group},function(rsp){
 		$('[week]').html('');
-		rsp = rsp.slice(1);
+		rsp = rsp.trim();
 		rsp = JSON.parse(rsp);
 		
 		count_rsp = rsp.length;
@@ -32,7 +32,7 @@ function get_rsp(){
                
 			}
 			
-			pr_htm = pr_htm.slice(1)+' ('+text_time+');';
+			pr_htm = pr_htm.trim()+' ('+text_time+');';
 			
 			
 			 $('#bild_rsp').find('div[week='+week+']').append(pr_htm);
