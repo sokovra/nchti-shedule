@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 function json_encode_cyr($str) {
 	$arr_replace_utf = array('\u0410', '\u0430','\u0411','\u0431','\u0412','\u0432',
@@ -23,24 +23,36 @@ $name = $_POST['pr_name'];
 
 include 'sql.php';
 
-$mys = new mysqli('localhost',$sql,$pass,$sql);
+$mys = new mysqli('localhost',$sql,$pass,$database);
 
-$tbl = $mys -> query("SELECT * FROM `rsp` WHERE `name` = '$name'");
-
-$i=0;
-
-while($res_tbl = $tbl->fetch_assoc()){
-	$arr[$i][0] = $res_tbl['name'];
-	$arr[$i][1] = $res_tbl['groups'];
-	$arr[$i][2] = $res_tbl['group'];
-	$arr[$i][3] = $res_tbl['week'];
-	$arr[$i][4] = $res_tbl['time'];
-	$arr[$i][5] = $res_tbl['pair'];
-	$i++;
+if (isset($_POST['pr_name_sel'])&&($_POST['pr_name_sel']=='pr_name_sel')) {
+	$tbl = $mys -> query("select DISTINCT name from rsp");
+    $seltext = '';
+    while($res_tbl = $tbl->fetch_assoc()){
+    	$seltext .= '<option value='.$res_tbl['name'].'>'.$res_tbl['name'].'</option>';
+		//$arr[] = $res_tbl['name'];
+	}
+	//echo json_encode_cyr($arr);
+    echo $seltext;
 }
+else {
+	$tbl = $mys -> query("SELECT * FROM `rsp` WHERE `name` = '$name'");
 
-$arr = json_encode_cyr($arr);
+	$i=0;
 
-echo $arr;
+	while($res_tbl = $tbl->fetch_assoc()){
+		$arr[$i][0] = $res_tbl['name'];
+		$arr[$i][1] = $res_tbl['groups'];
+		$arr[$i][2] = $res_tbl['group'];
+		$arr[$i][3] = $res_tbl['week'];
+		$arr[$i][4] = $res_tbl['time'];
+		$arr[$i][5] = $res_tbl['pair'];
+		$i++;
+	}
+
+	$arr = json_encode_cyr($arr);
+
+	echo $arr;
+}
 
 ?>
