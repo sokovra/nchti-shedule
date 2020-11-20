@@ -9,7 +9,7 @@ echo 1;
 
 include 'sql.php';
 
-$mys = new mysqli('localhost',$sql,$pass,$sql);
+$mys = new mysqli('localhost',$sql,$pass,$db);
 
 $arr_count = count($array);
 
