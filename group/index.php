@@ -1,8 +1,8 @@
 ﻿<?php
 include '../ops.php';
 include '../sql.php';
+//change 2022.10.19
 ?>
-
 
 <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
 <script>
