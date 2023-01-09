@@ -1,5 +1,6 @@
-﻿<?php
+<?php
 include 'ops.php';
+//
 ?>
 
 
