@@ -2,7 +2,7 @@
 $send = $_POST['send'];
 
 $array = JSON_decode($send);
-//+++
+//+++//
 //////echo 1;
 
 include 'sql.php';
